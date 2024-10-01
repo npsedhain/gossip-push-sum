@@ -68,14 +68,7 @@ actor Worker
     let ratio_diff = (previous_ratio - current_ratio).abs()
 
     if _converged then
-      let rand_value: I32 = @rand()
-      let index: USize = (rand_value.abs().usize() % _neighbors.size().usize())
-      try
-        let randomNeighbor: Worker tag = _neighbors(index)?
-        randomNeighbor.computePushSum(received_sum, received_weight, delta, main)
-      else
-        _env.out.print("Error accessing neighbor at index: " + index.string())
-      end
+      sendToRandomNeighbor(received_sum, received_weight, delta, main)
     else
       if ratio_diff > delta then
         _stable_rounds = 0
@@ -93,36 +86,46 @@ actor Worker
       _weight = newweight / 2.0
       previous_ratio = _sum/_weight
 
-
-      let rand_value: I32 = @rand()
-      let index: USize = (rand_value.abs().usize() % _neighbors.size().usize())
-      try
-        let randomNeighbor: Worker tag = _neighbors(index)?
-        randomNeighbor.computePushSum(_sum, _weight, delta, main)
-      else
-        _env.out.print("Error accessing neighbor at index: " + index.string())
-      end
+      sendToRandomNeighbor(_sum, _weight, delta, main)
+      
     end
-
+  
+  fun ref sendToRandomNeighbor(sum: F64, weight: F64, delta: F64, main: Main) =>
+    let rand_value: I32 = @rand()
+    let index: USize = (rand_value.abs().usize() % _neighbors.size().usize())
+    try
+      let randomNeighbor: Worker tag = _neighbors(index)?
+      randomNeighbor.computePushSum(sum, weight, delta, main)
+    else
+      _env.out.print("Error accessing neighbor at index: " + index.string())
+    end
 
   be startGossip(main: Main) =>
-  
-    _rumourCount = _rumourCount + 1
-    
-    if _rumourCount <= 10 then
-      for i in Range[USize](0, _neighbors.size()) do
-        try
-          let neighbor: Worker tag = _neighbors(i)?
-            neighbor.startGossip(main)
-        else
-          _env.out.print("Error accessing neighbor at index: " + i.string())
-        end
-      end
+    if _halted then
+      return
     end
-    
-    if _rumourCount==10 then
-      _converged = true
-      main.worker_converged(_id)
+  
+    if _converged then 
+      gossipToRandomNeighbor(main)
+    else
+      _rumourCount = _rumourCount + 1
+
+      if _rumourCount >= 10 then
+        _converged = true
+        main.worker_converged(_id)
+      end
+      gossipToRandomNeighbor(main)
+    end
+
+  
+  fun ref gossipToRandomNeighbor(main: Main) =>
+    let rand_value: I32 = @rand()
+    let index: USize = (rand_value.abs().usize() % _neighbors.size().usize())
+    try
+      let randomNeighbor: Worker tag = _neighbors(index)?
+      randomNeighbor.startGossip(main)
+    else
+      _env.out.print("Error accessing neighbor at index: " + index.string())
     end
 
   be notify_ready(main: Main) =>
@@ -185,7 +188,6 @@ actor Main
       startAlgorithm() 
     end
 
-  // Create Worker instances
   fun ref createWorkers() =>
     for i in Range[I64](0, totalNodes) do
       let worker = Worker(_env, _supervisor, i)
@@ -259,3 +261,4 @@ actor Main
 
   be receive_neighbor_count(worker_id: I64, count: USize) =>
     _env.out.print("Worker " + worker_id.string() + " has " + count.string() + " neighbors")
+    
