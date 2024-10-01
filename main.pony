@@ -1,6 +1,10 @@
 use "collections"
  
 
+use @rand[I32]()
+use @srand[None](seed: U32)
+use @time[U64]()
+
 actor ConvergenceDetector
   let _env: Env
 
@@ -19,17 +23,88 @@ actor Worker
   var _id: I64
   let _env: Env
   var _converged: Bool = false
+  var previous_ratio: F64 = 0.0
+  var _stable_rounds: I64 = 0
+  var _halted: Bool = false
 
   new create(env: Env, supervisor: ConvergenceDetector, id: I64) =>
     _supervisor = supervisor
     _id = id
     _neighbors = []
     _env = env
-    _env.out.print("Worker " + id.string() + " created.")
+    _sum = (id+1).f64()
+    previous_ratio =_sum/_weight
+
 
   be countNeighbors(main: Main) =>
     main.receive_neighbor_count(_id, _neighbors.size())
   
+  be startPushSum(delta: F64, main: Main) =>
+    let rand_value: I32 = @rand()
+    let index: USize = (rand_value.abs().usize() % _neighbors.size().usize())
+    let half_sum = _sum / 2.0
+    let half_weight = _weight / 2.0
+    _sum = half_sum
+    _weight = half_weight
+    previous_ratio = _sum / _weight
+
+    try
+      let randomNeighbor: Worker tag = _neighbors(index)?
+      randomNeighbor.computePushSum(half_sum, half_weight, delta, main)
+    else
+      _env.out.print("Error accessing neighbor at index: " + index.string())
+    end
+  
+  be halt() =>
+    _halted = true
+  
+  be computePushSum(received_sum: F64, received_weight: F64, delta: F64, main: Main) =>
+    if _halted then
+      return
+    end
+    let newsum = _sum + received_sum
+    let newweight = _weight + received_weight
+    let current_ratio = _sum / _weight
+    let ratio_diff = (previous_ratio - current_ratio).abs()
+
+    if _converged then
+      let rand_value: I32 = @rand()
+      let index: USize = (rand_value.abs().usize() % _neighbors.size().usize())
+      try
+        let randomNeighbor: Worker tag = _neighbors(index)?
+        randomNeighbor.computePushSum(received_sum, received_weight, delta, main)
+      else
+        _env.out.print("Error accessing neighbor at index: " + index.string())
+      end
+    else
+      if ratio_diff > delta then
+        _stable_rounds = 0
+      else
+        _stable_rounds = _stable_rounds + 1
+      end
+
+      if _stable_rounds >= 3 then
+        _converged = true
+        main.worker_converged(_id)
+      end
+
+      
+      _sum = newsum / 2.0
+      _weight = newweight / 2.0
+      previous_ratio = _sum/_weight
+
+
+      let rand_value: I32 = @rand()
+      let index: USize = (rand_value.abs().usize() % _neighbors.size().usize())
+      try
+        let randomNeighbor: Worker tag = _neighbors(index)?
+        randomNeighbor.computePushSum(_sum, _weight, delta, main)
+      else
+        _env.out.print("Error accessing neighbor at index: " + index.string())
+      end
+    end
+
+
   be startGossip(main: Main) =>
   
     _rumourCount = _rumourCount + 1
@@ -67,11 +142,14 @@ actor Main
   var _workers_ready: USize = 0
   var _neighbors_ready: USize = 0
   var _algorithm: String = ""
+  var converged_workers: HashSet[I64, HashEq[I64]] = HashSet[I64, HashEq[I64]]
 
   new create(env: Env) =>
-
+    converged_workers = HashSet[I64, HashEq[I64]].create()
+    env.out.print("Converged Worker Count: " + converged_workers.size().string()) 
     _env = env
     _supervisor = ConvergenceDetector(env)
+    @srand(@time().u32())
     try
       totalNodes = _env.args(1)?.i64()?
       let topology = _env.args(2)?
@@ -101,6 +179,9 @@ actor Main
   be neighbor_assigned() =>
     _neighbors_ready = _neighbors_ready + 1
     if _neighbors_ready == totalNodes.usize() then
+       
+      _env.out.print("Converged Worker")
+
       startAlgorithm() 
     end
 
@@ -115,6 +196,20 @@ actor Main
 
   be worker_converged(worker_id: I64) =>
     _env.out.print("Worker " + worker_id.string() + " has converged.")
+    try
+      if not converged_workers.contains(worker_id) then
+      
+        converged_workers = converged_workers.add(worker_id)
+        if converged_workers.size() == totalNodes.usize() then
+          for i in Range[I64](0, totalNodes) do
+            let current: Worker tag = _workers(i.usize())?
+            current.halt() // Send halt message to each worker
+          end  
+        end
+      end
+    else
+       _env.out.print("Error checking or adding worker convergence.")
+    end
 
   fun ref startAlgorithm() =>
     try
@@ -128,7 +223,7 @@ actor Main
         _env.out.print("Starting Push-Sum Algorithm.")
       
         let starter_worker: Worker tag = _workers(0)?
-        //starter_worker.startPushSum(this)
+        starter_worker.startPushSum(10e-10,this)
 
       else
       _env.out.print("Unknown algorithm: " + _algorithm)
