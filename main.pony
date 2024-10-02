@@ -162,7 +162,7 @@ actor Worker
       main.neighbor_assigned()
     end
   
-  be assignNeighbors3D(neighbor_id: I64, neighbor: Worker tag, main: Main, total_nodes: I64, cube_root_no: I64) =>
+  be assignNeighbors3D(neighbor_id: I64, neighbor: Worker tag, main: Main, total_nodes: I64, cube_root_no: I64, topology: String) =>
     neighborPusher(neighbor)
   
     // Calculate x, y, z positions for this worker
@@ -183,13 +183,13 @@ actor Worker
     if (z == 0) or (z == (cube_root_no - 1)) then 
       expected_neighbors = expected_neighbors - 1 
     end
-
+    
     // If all expected neighbors have been assigned, notify the main process
-    if _neighbors.size() == expected_neighbors then
+    if (_neighbors.size() == (expected_neighbors+1)) and (topology=="imp3D")  then
+      main.neighbor_assigned()
+    elseif (_neighbors.size() == expected_neighbors) and (topology=="3D") then
       main.neighbor_assigned()
     end
-
-
 
   fun ref neighborPusher(neighbor: Worker tag) =>
     _neighbors.push(neighbor)
@@ -302,11 +302,8 @@ actor Main
       initializeNeighborsLine()
     elseif _topology == "full" then
       initializeNeighborsFull()
-    elseif _topology == "3D" then
+    elseif (_topology == "3D") or (_topology == "imp3D") then
       initializeNeighbors3D()
-    elseif _topology == "imp3D" then
-      //todo
-      _env.out.print("IMP 3D here")
     else
       _env.out.print("Unknown topology: " + _topology)
     end
@@ -355,9 +352,12 @@ actor Main
   fun ref initializeNeighbors3D() =>
     try
       for i in Range[I64](0, totalNodes) do
-        _env.out.print("Initializing 3D neighbors for Worker " + i.string())
+        //_env.out.print("Initializing 3D neighbors for Worker " + i.string())
 
         var current: Worker tag = _workers(i.usize())?
+        //We made excluded ids so that we dont repeat the random neighbor when assigning for Imperfect 3D topology
+        var excluded_ids= HashSet[I64, HashEq[I64]].create()
+        excluded_ids=excluded_ids.add(i)
 
         // Compute x, y, z for the current worker
         let x = i % cube_root_no
@@ -366,40 +366,64 @@ actor Main
 
         // Left neighbor (x-1, y, z) if x > 0
         if x > 0 then
-          current.assignNeighbors3D(i - 1, _workers((i - 1).usize())?, this, totalNodes, cube_root_no)
+          excluded_ids=excluded_ids.add(i-1)
+          current.assignNeighbors3D(i - 1, _workers((i - 1).usize())?, this, totalNodes, cube_root_no, _topology)
         end
       
         // Right neighbor (x+1, y, z) if x < cube_root_no - 1
         if x < (cube_root_no - 1) then
-          current.assignNeighbors3D(i + 1, _workers((i + 1).usize())?, this, totalNodes, cube_root_no)
+          excluded_ids=excluded_ids.add(i+1)
+          current.assignNeighbors3D(i + 1, _workers((i + 1).usize())?, this, totalNodes, cube_root_no,  _topology)
         end
       
         // Front neighbor (x, y-1, z) if y > 0
         if y > 0 then
-          current.assignNeighbors3D(i - cube_root_no, _workers((i - cube_root_no).usize())?, this, totalNodes, cube_root_no)
+          excluded_ids=excluded_ids.add(i - cube_root_no)
+          current.assignNeighbors3D(i - cube_root_no, _workers((i - cube_root_no).usize())?, this, totalNodes, cube_root_no,  _topology)
         end
       
         // Back neighbor (x, y+1, z) if y < cube_root_no - 1
         if y < (cube_root_no - 1) then
-          current.assignNeighbors3D(i + cube_root_no, _workers((i + cube_root_no).usize())?, this, totalNodes, cube_root_no)
+          excluded_ids=excluded_ids.add(i + cube_root_no)
+          current.assignNeighbors3D(i + cube_root_no, _workers((i + cube_root_no).usize())?, this, totalNodes, cube_root_no,  _topology)
         end
       
         // Top neighbor (x, y, z-1) if z > 0
         if z > 0 then
-          current.assignNeighbors3D(i - (cube_root_no * cube_root_no), _workers((i - (cube_root_no * cube_root_no)).usize())?, this, totalNodes, cube_root_no)
+          excluded_ids=excluded_ids.add(i - (cube_root_no * cube_root_no))
+          current.assignNeighbors3D(i - (cube_root_no * cube_root_no), _workers((i - (cube_root_no * cube_root_no)).usize())?, this, totalNodes, cube_root_no,  _topology)
         end
       
         // Bottom neighbor (x, y, z+1) if z < cube_root_no - 1
         if z < (cube_root_no - 1) then
-          current.assignNeighbors3D(i + (cube_root_no * cube_root_no), _workers((i + (cube_root_no * cube_root_no)).usize())?, this, totalNodes, cube_root_no)
+          excluded_ids=excluded_ids.add(i + (cube_root_no * cube_root_no))
+          current.assignNeighbors3D(i + (cube_root_no * cube_root_no), _workers((i + (cube_root_no * cube_root_no)).usize())?, this, totalNodes, cube_root_no,  _topology)
         end
-
-        // After assigning all possible neighbors, count them
+        
+        if _topology == "imp3D" then
+          assignRandomNeighborImp3D(current, excluded_ids)
+        end
         current.countNeighbors(this)
       end
     else
       _env.out.print("Error assigning 3D neighbors.")
     end
+
+  
+  fun ref assignRandomNeighborImp3D(current: Worker tag, excluded_ids: HashSet[I64, HashEq[I64]]) =>
+    var assigned: Bool = false
+    while not assigned do
+      let rand_index: I64 = (@rand() % totalNodes.i32()).i64()
+
+      if not excluded_ids.contains(rand_index) then
+        try
+          current.assignNeighbors3D(rand_index, _workers(rand_index.usize())?, this, totalNodes, cube_root_no, _topology)
+          assigned = true
+        else
+          _env.out.print("Error accessing random worker at index: " + rand_index.string())
+      end
+    end
+  end
 
 
   be receive_neighbor_count(worker_id: I64, count: USize) =>
