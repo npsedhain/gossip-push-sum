@@ -131,11 +131,20 @@ actor Worker
   be notify_ready(main: Main) =>
     main.worker_ready(this)
 
-  be assignNeighbors(neighbor: Worker tag, main:Main, total_nodes: I64) =>
-    _neighbors.push(neighbor)
+  be assignNeighborsLine(neighbor: Worker tag, main:Main, total_nodes: I64) =>
+    neighborPusher(neighbor)
     if (_neighbors.size() == 2) or ((_id == 0) and (_neighbors.size() == 1)) or ((_id == (total_nodes - 1)) and (_neighbors.size() == 1)) then
       main.neighbor_assigned()  
     end
+  
+  be assignNeighborsFull(neighbor: Worker tag, main: Main, total_nodes: I64) =>
+    neighborPusher(neighbor)
+    if _neighbors.size() == (total_nodes - 1).usize() then  
+      main.neighbor_assigned()
+    end
+  
+  fun ref neighborPusher(neighbor: Worker tag) =>
+    _neighbors.push(neighbor)
 
 actor Main
   var _supervisor: ConvergenceDetector
@@ -145,6 +154,7 @@ actor Main
   var _workers_ready: USize = 0
   var _neighbors_ready: USize = 0
   var _algorithm: String = ""
+  var _topology: String = ""
   var converged_workers: HashSet[I64, HashEq[I64]] = HashSet[I64, HashEq[I64]]
 
   new create(env: Env) =>
@@ -155,20 +165,14 @@ actor Main
     @srand(@time().u32())
     try
       totalNodes = _env.args(1)?.i64()?
-      let topology = _env.args(2)?
-      let algorithm = _env.args(3)?
-      _algorithm=algorithm
-
-      if topology == "line" then
-        createWorkers()
-        _env.out.print("Number of workers created: " + _workers.size().string()) // Check array size
-        _env.out.print("Total nodes: " + totalNodes.string())
-        _env.out.print("Topology: " + topology.string())
-        _env.out.print("Algorithm: " + algorithm.string())
-        _env.out.print("Number of workers: " + _workers.size().string())
-      else
-        _env.out.print("Only 'line' topology is supported for now.")
-      end
+      _topology = _env.args(2)?
+      _algorithm = _env.args(3)?
+      createWorkers()
+      /*_env.out.print("Number of workers created: " + _workers.size().string()) // Check array size
+      _env.out.print("Total nodes: " + totalNodes.string())
+      _env.out.print("Topology: " + _topology.string())
+      _env.out.print("Algorithm: " + _algorithm.string())
+      _env.out.print("Number of workers: " + _workers.size().string())*/
     else
       _env.out.print("Invalid input.")
     end
@@ -176,6 +180,7 @@ actor Main
   be worker_ready(worker: Worker) =>
     _workers_ready = _workers_ready + 1
     if _workers_ready == totalNodes.usize() then
+     
       initializeNeighbors()
     end
   
@@ -236,8 +241,35 @@ actor Main
       end
 
   fun ref initializeNeighbors() =>
-    var neighbors = Array[Worker tag]
+    _env.out.print(_algorithm.string())
+    if _topology=="line" then
+      initializeNeighborsLine()
+    elseif _topology == "full" then
+      initializeNeighborsFull()
+    else
+      _env.out.print("Unknown topology: " + _topology)
+    end
+  
 
+  fun ref initializeNeighborsFull() =>
+    try
+      for i in Range[I64](0, totalNodes) do
+        _env.out.print("Initializing full network neighbors for Worker " + i.string())
+      
+        var current: Worker tag = _workers(i.usize())?
+        for j in Range[I64](0, totalNodes) do
+          if i != j then
+            current.assignNeighborsFull(_workers(j.usize())?, this, totalNodes)
+          end
+        end
+
+        current.countNeighbors(this)
+      end
+    else
+      _env.out.print("Error assigning full network neighbors.")
+    end
+
+  fun ref initializeNeighborsLine() =>
     try
       for i in Range[I64](0, totalNodes) do
         _env.out.print("Initializing neighbors for Worker " + i.string())
@@ -245,11 +277,11 @@ actor Main
         var current: Worker tag = _workers(i.usize())?
 
         if i > 0 then
-          current.assignNeighbors(_workers((i - 1).usize())?, this, totalNodes) // Left neighbor
+          current.assignNeighborsLine(_workers((i - 1).usize())?, this, totalNodes) // Left neighbor
         end
 
         if i < (totalNodes - 1) then
-          current.assignNeighbors(_workers((i + 1).usize())?, this, totalNodes) // Right neighbor
+          current.assignNeighborsLine(_workers((i + 1).usize())?, this, totalNodes) // Right neighbor
         end
 
         current.countNeighbors(this)
