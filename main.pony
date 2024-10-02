@@ -246,6 +246,10 @@ actor Main
       initializeNeighborsLine()
     elseif _topology == "full" then
       initializeNeighborsFull()
+    elseif _topology == "3D" then
+      //todo for 3D
+    elseif _topology == "imp3D" then
+      //todo for imp3D
     else
       _env.out.print("Unknown topology: " + _topology)
     end
