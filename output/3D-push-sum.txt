@@ -1,0 +1,48 @@
+Creating workers...   Cube root: 5   Input nodes: 100
+Total nodes: 125  Topology: 3D  Algorithm: push-sum
+-----Initializing Network-----
+All Neighbors Ready
+------Starting Algorithm------
+Program converged at 39.8306ms
+
+Creating workers...   Cube root: 8   Input nodes: 400
+Total nodes: 512  Topology: 3D  Algorithm: push-sum
+-----Initializing Network-----
+All Neighbors Ready
+------Starting Algorithm------
+Program converged at 345.914ms
+
+Creating workers...   Cube root: 10   Input nodes: 800
+Total nodes: 1000  Topology: 3D  Algorithm: push-sum
+-----Initializing Network-----
+All Neighbors Ready
+------Starting Algorithm------
+Program converged at 1067.6ms
+
+Creating workers...   Cube root: 11   Input nodes: 1200
+Total nodes: 1331  Topology: 3D  Algorithm: push-sum
+-----Initializing Network-----
+All Neighbors Ready
+------Starting Algorithm------
+Program converged at 1721.99ms
+
+Creating workers...   Cube root: 16   Input nodes: 4000
+Total nodes: 4096  Topology: 3D  Algorithm: push-sum
+-----Initializing Network-----
+All Neighbors Ready
+------Starting Algorithm------
+Program converged at 11747.4ms
+
+Creating workers...   Cube root: 20   Input nodes: 7000
+Total nodes: 8000  Topology: 3D  Algorithm: push-sum
+-----Initializing Network-----
+All Neighbors Ready
+------Starting Algorithm------
+Program converged at 38065.7ms
+
+Creating workers...   Cube root: 22   Input nodes: 10000
+Total nodes: 10648  Topology: 3D  Algorithm: push-sum
+-----Initializing Network-----
+All Neighbors Ready
+------Starting Algorithm------
+Program converged at 63722.4ms

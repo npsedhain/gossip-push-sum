@@ -1,0 +1,48 @@
+Creating workers...   Cube root: 5   Input nodes: 100
+Total nodes: 125  Topology: 3D  Algorithm: gossip
+-----Initializing Network-----
+All Neighbors Ready
+------Starting Algorithm------
+Program converged at 3.20542ms
+
+Creating workers...   Cube root: 8   Input nodes: 400
+Total nodes: 512  Topology: 3D  Algorithm: gossip
+-----Initializing Network-----
+All Neighbors Ready
+------Starting Algorithm------
+Program converged at 14.2437ms
+
+Creating workers...   Cube root: 10   Input nodes: 800
+Total nodes: 1000  Topology: 3D  Algorithm: gossip
+-----Initializing Network-----
+All Neighbors Ready
+------Starting Algorithm------
+Program converged at 36.3333ms
+
+Creating workers...   Cube root: 11   Input nodes: 1200
+Total nodes: 1331  Topology: 3D  Algorithm: gossip
+-----Initializing Network-----
+All Neighbors Ready
+------Starting Algorithm------
+Program converged at 61.847ms
+
+Creating workers...   Cube root: 16   Input nodes: 4000
+Total nodes: 4096  Topology: 3D  Algorithm: gossip
+-----Initializing Network-----
+All Neighbors Ready
+------Starting Algorithm------
+Program converged at 266.558ms
+
+Creating workers...   Cube root: 20   Input nodes: 8000
+Total nodes: 8000  Topology: 3D  Algorithm: gossip
+-----Initializing Network-----
+All Neighbors Ready
+------Starting Algorithm------
+Program converged at 874.384ms
+
+Creating workers...   Cube root: 23   Input nodes: 12000
+Total nodes: 12167  Topology: 3D  Algorithm: gossip
+-----Initializing Network-----
+All Neighbors Ready
+------Starting Algorithm------
+Program converged at 2047.33ms

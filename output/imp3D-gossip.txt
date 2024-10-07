@@ -1,0 +1,48 @@
+Creating workers...   Cube root: 5   Input nodes: 100
+Total nodes: 125  Topology: imp3D  Algorithm: gossip
+-----Initializing Network-----
+All Neighbors Ready
+------Starting Algorithm------
+Program converged at 4.38175ms
+
+Creating workers...   Cube root: 8   Input notes: 400
+Total nodes: 512  Topology: imp3D  Algorithm: gossip
+-----Initializing Network-----
+All Neighbors Ready
+------Starting Algorithm------
+Program converged at 17.7929ms
+
+Creating workers...   Cube root: 10   Input nodes: 800
+Total nodes: 1000  Topology: imp3D  Algorithm: gossip
+-----Initializing Network-----
+All Neighbors Ready
+------Starting Algorithm------
+Program converged at 40.0928ms
+
+Creating workers...   Cube root: 11   Input notes: 1200
+Total nodes: 1331  Topology: imp3D  Algorithm: gossip
+-----Initializing Network-----
+All Neighbors Ready
+------Starting Algorithm------
+Program converged at 51.2313ms
+
+Creating workers...   Cube root: 16   Input nodes: 4000
+Total nodes: 4096  Topology: imp3D  Algorithm: gossip
+-----Initializing Network-----
+All Neighbors Ready
+------Starting Algorithm------
+Program converged at 257.33ms
+
+Creating workers...   Cube root: 20   Input nodes: 8000
+Total nodes: 8000  Topology: imp3D  Algorithm: gossip
+-----Initializing Network-----
+All Neighbors Ready
+------Starting Algorithm------
+Program converged at 919.216ms
+
+Creating workers...   Cube root: 23   Input nodes: 12000
+Total nodes: 12167  Topology: imp3D  Algorithm: gossip
+-----Initializing Network-----
+All Neighbors Ready
+------Starting Algorithm------
+Program converged at 2132.44ms

@@ -1,0 +1,41 @@
+Total nodes: 100  Topology: full  Algorithm: push-sum
+-----Initializing Network-----
+All Neighbors Ready
+------Starting Algorithm------
+Program converged at 9.89937ms
+
+Total nodes: 400  Topology: full  Algorithm: push-sum
+-----Initializing Network-----
+All Neighbors Ready
+------Starting Algorithm------
+Program converged at 23.4101ms
+
+Total nodes: 800  Topology: full  Algorithm: push-sum
+-----Initializing Network-----
+All Neighbors Ready
+------Starting Algorithm------
+Program converged at 62.8776ms
+
+Total nodes: 1200  Topology: full  Algorithm: push-sum
+-----Initializing Network-----
+All Neighbors Ready
+------Starting Algorithm------
+Program converged at 114.458ms
+
+Total nodes: 4000  Topology: full  Algorithm: push-sum
+-----Initializing Network-----
+All Neighbors Ready
+------Starting Algorithm------
+Program converged at 526.876ms
+
+Total nodes: 7000  Topology: full  Algorithm: push-sum
+-----Initializing Network-----
+All Neighbors Ready
+------Starting Algorithm------
+Program converged at 2925.51ms
+
+Total nodes: 10000  Topology: full  Algorithm: push-sum
+-----Initializing Network-----
+All Neighbors Ready
+------Starting Algorithm------
+Program converged at 4171.89ms

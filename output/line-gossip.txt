@@ -1,0 +1,42 @@
+Total nodes: 100  Topology: line  Algorithm: gossip
+-----Initializing Network-----
+All Neighbors Ready
+------Starting Algorithm------
+Program converged at 4.15133ms
+
+Total nodes: 400  Topology: line  Algorithm: gossip
+-----Initializing Network-----
+All Neighbors Ready
+------Starting Algorithm------
+Program converged at 139.486ms
+
+Total nodes: 800  Topology: line  Algorithm: gossip
+-----Initializing Network-----
+All Neighbors Ready
+------Starting Algorithm------
+Program converged at 379.681ms
+
+Total nodes: 1200  Topology: line  Algorithm: gossip
+-----Initializing Network-----
+All Neighbors Ready
+------Starting Algorithm------
+Program converged at 801.525ms
+
+Total nodes: 4000  Topology: line  Algorithm: gossip
+-----Initializing Network-----
+All Neighbors Ready
+------Starting Algorithm------
+Program converged at 3576.35ms
+
+Total nodes: 8000  Topology: line  Algorithm: gossip
+-----Initializing Network-----
+All Neighbors Ready
+------Starting Algorithm------
+Program converged at 9395.62ms
+
+Total nodes: 12000  Topology: line  Algorithm: gossip
+-----Initializing Network-----
+All Neighbors Ready
+------Starting Algorithm------
+Program converged at 71414.2ms
+
