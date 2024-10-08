@@ -37,6 +37,8 @@
 
 ## How to run?
 
+- You can view the project at https://github.com/npsedhain/gossip-push-sum
+
 - Download the repository `git clone git@github.com:npsedhain/gossip-push-sum.git`
 
 - Change directory to `gossip-push-sum` locally and run `ponyc`

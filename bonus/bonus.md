@@ -13,6 +13,8 @@
 
 ## How to run?
 
+- You can view the project at https://github.com/npsedhain/gossip-push-sum/tree/main/bonus
+
 - Download the repository `git clone git@github.com:npsedhain/gossip-push-sum.git`
 
 - Change directory to `gossip-push-sum/bonus` locally and run `ponyc`
@@ -38,8 +40,6 @@ fun ref getFailedNodes(total: I64) =>
     _failed_nodes.set(index)
   end
 ```
-
-In concept, there is little difference between converged nodes and failed nodes as both of these do not participate in the communication. Hence, if the node is failed, we assume it has already converged and it no longer takes part in the communication protocol.
 
 We found that doing this, the intuitive response was the reduction of convergence time - which is exactly what we found out.
 
