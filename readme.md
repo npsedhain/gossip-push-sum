@@ -39,7 +39,8 @@
 
 - Download the repository `git clone git@github.com:npsedhain/gossip-push-sum.git`
 
-- Change directory to gossip-push-sum locally and run `ponyc`
+- Change directory to `gossip-push-sum` locally and run `ponyc`
+
 - You should see a binary file being created in the directory with the directory name: `gossip-push-sum`, then you can run `./gossip-push-sum numberOfNodes network algorithm`
 	- where `numberOfNodes` is the total number of participants you want in the distributed systems;
 	- `network` is the type of network you want to test in -

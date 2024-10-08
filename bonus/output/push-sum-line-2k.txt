@@ -1,0 +1,27 @@
+---with 20% failure---
+Total nodes: 2000  Topology: line  Algorithm: push-sum
+-----Initializing Network-----
+All Neighbors Ready
+------Starting Algorithm------
+Program converged at 2555.95ms
+
+---with 40% failure---
+Total nodes: 2000  Topology: line  Algorithm: push-sum
+-----Initializing Network-----
+All Neighbors Ready
+------Starting Algorithm------
+Program converged at 4784.25ms
+
+---with 60% failure---
+Total nodes: 2000  Topology: line  Algorithm: push-sum
+-----Initializing Network-----
+All Neighbors Ready
+------Starting Algorithm------
+Program converged at 6342.58ms
+
+---with 80% failure---
+Total nodes: 2000  Topology: line  Algorithm: push-sum
+-----Initializing Network-----
+All Neighbors Ready
+------Starting Algorithm------
+Program converged at 3707.51ms

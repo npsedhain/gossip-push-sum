@@ -1,0 +1,31 @@
+---with 20% failure---
+Creating workers...   Cube root: 18   Input notes: 5000
+Total nodes: 5832  Topology: imp3D  Algorithm: push-sum
+-----Initializing Network-----
+All Neighbors Ready
+------Starting Algorithm------
+Program converged at 2017.68ms
+
+---with 40% failure---
+Creating workers...   Cube root: 18   Input notes: 5000
+Total nodes: 5832  Topology: imp3D  Algorithm: push-sum
+-----Initializing Network-----
+All Neighbors Ready
+------Starting Algorithm------
+Program converged at 2370.12ms
+
+---with 60% failure---
+Creating workers...   Cube root: 18   Input notes: 5000
+Total nodes: 5832  Topology: imp3D  Algorithm: push-sum
+-----Initializing Network-----
+All Neighbors Ready
+------Starting Algorithm------
+Program converged at 2356.53ms
+
+---with 80% failure---
+Creating workers...   Cube root: 18   Input notes: 5000
+Total nodes: 5832  Topology: imp3D  Algorithm: push-sum
+-----Initializing Network-----
+All Neighbors Ready
+------Starting Algorithm------
+Program converged at 2116.89ms

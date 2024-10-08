@@ -1,0 +1,27 @@
+---with 20% failure---
+Total nodes: 5000  Topology: full  Algorithm: gossip
+-----Initializing Network-----
+All Neighbors Ready
+------Starting Algorithm------
+Program converged at 545.039ms
+
+---with 40% failure---
+Total nodes: 5000  Topology: full  Algorithm: gossip
+-----Initializing Network-----
+All Neighbors Ready
+------Starting Algorithm------
+Program converged at 602.494ms
+
+---with 60% failure---
+Total nodes: 5000  Topology: full  Algorithm: gossip
+-----Initializing Network-----
+All Neighbors Ready
+------Starting Algorithm------
+Program converged at 1171.76ms
+
+---with 80% failure---
+Total nodes: 5000  Topology: full  Algorithm: gossip
+-----Initializing Network-----
+All Neighbors Ready
+------Starting Algorithm------
+Program converged at 889.094ms

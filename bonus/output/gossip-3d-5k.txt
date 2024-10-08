@@ -1,0 +1,31 @@
+---with 20% failure---
+Creating workers...   Cube root: 18   Input notes: 5000
+Total nodes: 5832  Topology: 3D  Algorithm: gossip
+-----Initializing Network-----
+All Neighbors Ready
+------Starting Algorithm------
+Program converged at 534.758ms
+
+---with 40% failure---
+Creating workers...   Cube root: 18   Input notes: 5000
+Total nodes: 5832  Topology: 3D  Algorithm: gossip
+-----Initializing Network-----
+All Neighbors Ready
+------Starting Algorithm------
+Program converged at 621.091ms
+
+---with 60% failure---
+Creating workers...   Cube root: 18   Input notes: 5000
+Total nodes: 5832  Topology: 3D  Algorithm: gossip
+-----Initializing Network-----
+All Neighbors Ready
+------Starting Algorithm------
+Program converged at 543.728ms
+
+---with 80% failure---
+Creating workers...   Cube root: 18   Input notes: 5000
+Total nodes: 5832  Topology: 3D  Algorithm: gossip
+-----Initializing Network-----
+All Neighbors Ready
+------Starting Algorithm------
+Program converged at 525.428ms
