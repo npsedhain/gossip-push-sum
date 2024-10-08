@@ -51,7 +51,7 @@ Below are the findings for some of the algorithm-network combination and what ha
 
 ### Gossip-3D-5k
 
-![Gossip 3D 5k Nodes Behavior with Failure](./images/gossip-3D-5k.png)
+![Gossip 3D 5k Nodes Behavior with Failure](./images/gossip-3d-5k.png)
 
 ### Push-Sum-Line-2k
 
